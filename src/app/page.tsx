@@ -33,6 +33,25 @@ function PostsList({ posts }: { posts: Post[] }) {
   );
 }
 
+// Componente de skeleton loaders
+function SkeletonPosts() {
+  // Defina quantos skeletons você deseja exibir
+  const skeletonArray = Array.from({ length: 12 });
+
+  return (
+    <div className="flex flex-col gap-4 w-full animate-pulse">
+      {skeletonArray.map((_, index) => (
+        <div
+          key={index}
+          className="flex flex-col p-6 bg-gray-200 border border-gray-200 rounded-md shadow-sm w-full"
+        >
+          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // Componente assíncrono que busca os posts e renderiza o PostsList
 async function PostsListWithData() {
   const posts = await getPosts();
@@ -48,7 +67,7 @@ export default function Home() {
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center sm:text-left w-full">
           Posts:
         </h1>
-        <Suspense fallback={<div>Loading posts...</div>}>
+        <Suspense fallback={<SkeletonPosts />}>
           {/* Envolvemos o componente assíncrono com Suspense */}
           <PostsListWithData />
         </Suspense>
