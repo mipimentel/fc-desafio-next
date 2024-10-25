@@ -1,12 +1,6 @@
 import { Suspense } from "react";
 import Link from 'next/link';
-
-interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
+import {Post} from './types';
 
 // Função de fetch diretamente no servidor
 async function getPosts(): Promise<Post[]> {
