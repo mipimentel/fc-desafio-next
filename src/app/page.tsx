@@ -9,6 +9,8 @@ interface Post {
 
 // Função de fetch diretamente no servidor
 async function getPosts(): Promise<Post[]> {
+  // adicione um sleep para testes
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
   return res.json();
 }
@@ -31,17 +33,24 @@ function PostsList({ posts }: { posts: Post[] }) {
   );
 }
 
-// Função principal do componente
-export default async function Home() {
+// Componente assíncrono que busca os posts e renderiza o PostsList
+async function PostsListWithData() {
   const posts = await getPosts();
+  return <PostsList posts={posts} />;
+}
 
+// Função principal do componente
+export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-gray-100 w-full">
       <main className="flex flex-col gap-8 items-center sm:items-start w-full">
         {/* Título geral dos posts */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center sm:text-left w-full">Posts:</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center sm:text-left w-full">
+          Posts:
+        </h1>
         <Suspense fallback={<div>Loading posts...</div>}>
-          <PostsList posts={posts} />
+          {/* Envolvemos o componente assíncrono com Suspense */}
+          <PostsListWithData />
         </Suspense>
       </main>
     </div>
