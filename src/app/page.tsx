@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from 'next/link';
 
 interface Post {
   userId: number;
@@ -18,14 +19,15 @@ function PostsList({ posts }: { posts: Post[] }) {
   return (
     <div className="flex flex-col gap-4 w-full">
       {posts.map((post: Post) => (
-        <div
-          key={post.id}
-          className="flex flex-col p-6 bg-white border border-gray-200 hover:bg-gray-50 transition-all rounded-md shadow-sm hover:shadow-lg cursor-pointer w-full"
-        >
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 tracking-wide transition-colors duration-300 hover:text-blue-600">
-            {post.title}
-          </h2>
-        </div>
+        <Link key={post.id} href={`/${post.id}`}>
+          <div
+            className="flex flex-col p-6 bg-white border border-gray-200 hover:bg-gray-50 transition-all rounded-md shadow-sm hover:shadow-lg cursor-pointer w-full"
+          >
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 tracking-wide transition-colors duration-300 hover:text-blue-600">
+              {post.title}
+            </h2>
+          </div>
+        </Link>
       ))}
     </div>
   );
