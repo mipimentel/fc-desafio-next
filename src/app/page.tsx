@@ -9,8 +9,6 @@ interface Post {
 
 // Função de fetch diretamente no servidor
 async function getPosts(): Promise<Post[]> {
-  // adicione um sleep para testes
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
   return res.json();
 }
