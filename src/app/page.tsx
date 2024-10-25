@@ -1,6 +1,5 @@
-'use client';
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense } from "react";
 
 interface Post {
   userId: number;
@@ -9,21 +8,27 @@ interface Post {
   body: string;
 }
 
+// Função de fetch diretamente no servidor
 async function getPosts(): Promise<Post[]> {
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
   return res.json();
 }
 
-export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);
+// Componente para renderizar os posts
+function PostsList({ posts }: { posts: Post[] }) {
+  return (
+    <>
+      {posts.map((post: Post) => (
+        <div key={post.id}>{post.title}</div>
+      ))}
+    </>
+  );
+}
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const data = await getPosts();
-      setPosts(data);
-    };
-    fetchPosts();
-  }, []);
+// Função principal do componente
+export default async function Home() {
+  // Chamamos a função getPosts diretamente aqui
+  const posts = await getPosts();
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -36,9 +41,10 @@ export default function Home() {
           height={38}
           priority
         />
-        {posts.map((post: Post) => (
-          <div key={post.id}>{post.title}</div>
-        ))}
+        {/* Suspense vai renderizar o fallback até que o conteúdo esteja pronto */}
+        <Suspense fallback={<div>Loading posts...</div>}>
+          <PostsList posts={posts} />
+        </Suspense>
       </main>
     </div>
   );
